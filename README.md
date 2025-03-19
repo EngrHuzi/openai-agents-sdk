@@ -40,6 +40,14 @@ Visualize, debug, and optimize agent workflows using OpenAI’s built-in evaluat
 
 ## Quickstart Example
 
+## Installation
+
+To install the OpenAI Agents SDK, run:
+
+```sh
+uv add  openai-agents  python-dotenv
+```
+
 Here's how to create a simple agent using the SDK:
 
 ```python
