@@ -9,3 +9,4 @@ dependencies = [
     "openai-agents>=0.0.4",
     "python-dotenv>=1.0.1",
 ]
+
