@@ -8,5 +8,6 @@ dependencies = [
     "chainlit>=2.4.1",
     "openai-agents>=0.0.4",
     "python-dotenv>=1.0.1",
+    "tavily-python>=0.7.1",
 ]
 
