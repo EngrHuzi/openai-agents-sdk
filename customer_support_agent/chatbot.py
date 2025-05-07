@@ -1,20 +1,11 @@
 import os
-from typing import List, Dict, cast, Optional
+from typing import List, Dict, Optional
 from dotenv import load_dotenv
 import chainlit as cl
 from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, handoff
 from agents.run import RunConfig
-import logging
-from aiohttp import ClientError
-from openai import OpenAIError
 
-# Configure logging
-logging.basicConfig(
-    level=logging.DEBUG,  # Set to DEBUG for detailed logging during testing
-    filename="chatbot.log",
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-logger = logging.getLogger(__name__)
+
 
 # Load environment variables
 load_dotenv()
