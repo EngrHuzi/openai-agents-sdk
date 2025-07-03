@@ -1,0 +1,13 @@
+[project]
+name = "personal-finance-advisor-agent"
+version = "0.1.0"
+description = "A comprehensive AI assistant for personal finance, travel planning, reminders, and weather updates, utilizing advanced LLM agents and Chainlit."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "chainlit>=2.6.0",
+    "openai-agents>=0.1.0",
+    "pydantic>=2.11.7",
+    "python-dotenv>=1.1.1",
+    "tavily-python>=0.7.9",
+]
