@@ -28,7 +28,7 @@ async def greeting_input_guardrail(
             result = await Runner.run(greeting_input_guardrail_agent, input, context=ctx.context)
             return GuardrailFunctionOutput(
                 output_info=result.final_output,
-                tripwire_triggered=result.final_output.is_complex_request,
+                tripwire_triggered=result.final_output.is_off_topic,
             )
 
 class GreetingOutput(BaseModel):
@@ -52,10 +52,17 @@ async def greeting_output_guardrail(
             agent: Agent,
             output: GreetingOutput,
         ) -> GuardrailFunctionOutput:
-            result = await Runner.run(greeting_output_guardrail_agent, output.response, context=ctx.context)
+            # Support being passed either a ProjectManagementOutput object or a raw string
+            if isinstance(output, str):
+                text = output
+            else:
+                # If it's a Pydantic model or similar, try to read `.response`, fall back to str()
+                text = getattr(output, "response", None) or str(output)
+
+            result = await Runner.run(greeting_output_guardrail_agent, text, context=ctx.context)
             return GuardrailFunctionOutput(
                 output_info=result.final_output,
-                tripwire_triggered=result.final_output.is_off_topic,
+                tripwire_triggered=getattr(result.final_output, "is_off_topic", False),
             )
 
 class PreferenceItem(BaseModel):
@@ -107,10 +114,17 @@ async def user_preference_output_guardrail(
             agent: Agent,
             output: PreferenceOutput,
         ) -> GuardrailFunctionOutput:
-            result = await Runner.run(user_preference_output_guardrail_agent, output.message, context=ctx.context)
+            # Support being passed either a ProjectManagementOutput object or a raw string
+            if isinstance(output, str):
+                text = output
+            else:
+                # If it's a Pydantic model or similar, try to read `.response`, fall back to str()
+                text = getattr(output, "response", None) or str(output)
+                
+            result = await Runner.run(user_preference_output_guardrail_agent, text, context=ctx.context)
             return GuardrailFunctionOutput(
                 output_info=result.final_output,
-                tripwire_triggered=result.final_output.is_off_topic,
+                tripwire_triggered=getattr(result.final_output, "is_off_topic", False),
             )
 
 # ---------------------------
@@ -139,38 +153,52 @@ knowledge_graph_input_guardrail_agent = Agent(
 
 @input_guardrail
 async def knowledge_graph_input_guardrail(
-            ctx: RunContextWrapper[None],
-            agent: Agent,
-            input: str | List[TResponseInputItem],
-        ) -> GuardrailFunctionOutput:
-            result = await Runner.run(knowledge_graph_input_guardrail_agent, input, context=ctx.context)
-            return GuardrailFunctionOutput(
-                output_info=result.final_output,
-                tripwire_triggered=result.final_output.is_off_topic,
-            )
+    ctx: RunContextWrapper[None],
+    agent: Agent,
+    input: str | List[TResponseInputItem],
+) -> GuardrailFunctionOutput:
+    result = await Runner.run(knowledge_graph_input_guardrail_agent, input, context=ctx.context)
+    return GuardrailFunctionOutput(
+        output_info=result.final_output,
+        tripwire_triggered=result.final_output.is_off_topic,
+    )
+
+
+class KnowledgeGraphOutput(BaseModel):
+    summary: str
+
 
 class KnowledgeGraphOutputCheck(BaseModel):
-            is_off_topic: bool
-            reasoning: str
+    is_off_topic: bool
+    reasoning: str
+
 
 knowledge_graph_output_guardrail_agent = Agent(
-            name="Knowledge Graph Output Guardrail Agent",
-            instructions="Check if response is knowledge graph related.",
-            output_type=KnowledgeGraphOutputCheck,
-            model=model,
-        )
+    name="Knowledge Graph Output Guardrail Agent",
+    instructions="Check if response is knowledge graph related.",
+    output_type=KnowledgeGraphOutputCheck,
+    model=model,
+)
+
 
 @output_guardrail
 async def knowledge_graph_output_guardrail(
-            ctx: RunContextWrapper,
-            agent: Agent,
-            output: KnowledgeGraphOutput,
-        ) -> GuardrailFunctionOutput:
-            result = await Runner.run(knowledge_graph_output_guardrail_agent, output.summary, context=ctx.context)
-            return GuardrailFunctionOutput(
-                output_info=result.final_output,
-                tripwire_triggered=result.final_output.is_off_topic,
-            )
+    ctx: RunContextWrapper,
+    agent: Agent,
+    output: KnowledgeGraphOutput | str,
+) -> GuardrailFunctionOutput:
+    # Support being passed either a KnowledgeGraphOutput object or a raw string
+    if isinstance(output, str):
+        text = output
+    else:
+        # If it's a Pydantic model or similar, try to read `.summary`, fall back to str()
+        text = getattr(output, "summary", None) or str(output)
+
+    result = await Runner.run(knowledge_graph_output_guardrail_agent, text, context=ctx.context)
+    return GuardrailFunctionOutput(
+        output_info=result.final_output,
+        tripwire_triggered=getattr(result.final_output, "is_off_topic", False),
+    )
 
 
 class ProjectManagementInputCheck(BaseModel):
@@ -214,13 +242,18 @@ project_management_output_guardrail_agent = Agent(
 async def project_management_output_guardrail(
             ctx: RunContextWrapper,
             agent: Agent,
-            output: ProjectManagementOutput,
+            output: ProjectManagementOutput | str,
         ) -> GuardrailFunctionOutput:
-            result = await Runner.run(project_management_output_guardrail_agent, output.response, context=ctx.context)
+            # Support being passed either a ProjectManagementOutput object or a raw string
+            if isinstance(output, str):
+                text = output
+            else:
+                # If it's a Pydantic model or similar, try to read `.response`, fall back to str()
+                text = getattr(output, "response", None) or str(output)
+
+            result = await Runner.run(project_management_output_guardrail_agent, text, context=ctx.context)
             return GuardrailFunctionOutput(
                 output_info=result.final_output,
-                tripwire_triggered=result.final_output.is_off_topic,
+                tripwire_triggered=getattr(result.final_output, "is_off_topic", False),
             )
 
-class ProjectManagementAgentOutput(BaseModel):
-              response: str

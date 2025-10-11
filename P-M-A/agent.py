@@ -1,7 +1,5 @@
-import os
 import asyncio
-from dotenv import load_dotenv, find_dotenv
-# Agents Framework
+
 from agents import (
     Agent,
     Runner,
@@ -9,6 +7,7 @@ from agents import (
     handoff,
 
 )
+from agents.model_settings import ModelSettings
 from config import model
 from validate_check import (
     greeting_input_guardrail,
@@ -19,10 +18,6 @@ from validate_check import (
     knowledge_graph_output_guardrail,
     project_management_input_guardrail,
     project_management_output_guardrail,
-    GreetingOutput,
-    PreferenceOutput,
-    KnowledgeGraphOutput,
-    ProjectManagementAgentOutput,
 
 )
 
@@ -49,14 +44,13 @@ async def main():
     params_server = MCPServerStreamableHttpParams(
         url="http://localhost:8000/mcp"
     )
-    async with MCPServerStreamableHttp(params_server) as server:
+    async with MCPServerStreamableHttp(params_server,cache_tools_list=True) as server:
 
 
         greeting_agent = Agent(
             name="Greeting Agent",
             instructions=greeting_agent_instructions,
             model=model,
-            output_type=GreetingOutput,
             input_guardrails=[greeting_input_guardrail],
             output_guardrails=[greeting_output_guardrail],
         )
@@ -66,7 +60,6 @@ async def main():
             name="User Preference Agent",
             instructions=user_preference_agent_instructions,
             model=model,
-            output_type=PreferenceOutput,
             input_guardrails=[user_preference_input_guardrail],
             output_guardrails=[user_preference_output_guardrail],
         )
@@ -77,7 +70,6 @@ async def main():
             name="Knowledge Graph Agent",
             instructions=knowledge_graph_agent_instructions,
             model=model,
-            output_type=KnowledgeGraphOutput,
             input_guardrails=[knowledge_graph_input_guardrail],
             output_guardrails=[knowledge_graph_output_guardrail],
         )
@@ -88,10 +80,10 @@ async def main():
             name="Project Management Agent",
             instructions=project_management_agent_instructions,
             model=model,
-            output_type=ProjectManagementAgentOutput,
             input_guardrails=[project_management_input_guardrail],
             output_guardrails=[project_management_output_guardrail],
             mcp_servers=[server],   # ✅ Included MCP server
+            model_settings=ModelSettings(tool_choice="auto"),
         )
 
         # ---------------------------
@@ -111,13 +103,14 @@ async def main():
 
         orchestration_res = await Runner.run(
             orchestration_agent,
-            "Create a new task: Update the login page UI and assign it to Sam."
+            "Support me with  preference inheritance for team-based defaults ?"  # Test user preference query
         )
-        print("Orchestration Agent:", orchestration_res.final_output)
+        print("Orchestration Agent:", orchestration_res.to_input_list())
+        print(orchestration_res.final_output)
 
 
 # =========================================
 # RUN SCRIPT
 # =========================================
-if __name__ == "__main__":
-   asyncio.run(main())
+if __name__=="__main__":
+    asyncio.run(main())

@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 from mcp.server.fastmcp import FastMCP
+from datetime import timezone
 
 # Data Models
 class Task(BaseModel):
@@ -63,17 +64,43 @@ def update_task(update: TaskUpdate) -> dict:
     name="generate_daily_summary",
     description="Generate a summary of all tasks and their current status for a project"
 )
-def generate_daily_summary(project_id: str) -> dict:
+class DailySummaryResponse(BaseModel):
+    status: str
+    project_id: Optional[str] = None
+    assignee: Optional[str] = None
+    summary: str
+    details: Optional[dict] = None
+    generated_at: str
+
+
+def generate_daily_summary(project_id: Optional[str] = None, assignee: Optional[str] = None) -> dict:
     """
     Generates a daily summary of project tasks and their status.
-    Returns a formatted summary of project progress.
+    Either `project_id` or `assignee` must be provided.
+    Returns a structured summary suitable for callers/agents.
     """
-    return {
-        "status": "success",
-        "project_id": project_id,
-        "summary": "Daily summary of project tasks and status",
-        "date": datetime.now().strftime("%Y-%m-%d")
-    }
+    # Input validation: require at least one identifier
+    if not project_id and not assignee:
+        return {
+            "status": "error",
+            "message": "Either `project_id` or `assignee` must be provided"
+        }
+
+    # Mocked aggregation - replace with real API calls in production
+    details = {"to_do": 3, "in_progress": 4, "done": 10}
+
+    generated_at = datetime.utcnow().replace(tzinfo=timezone.utc).isoformat()
+
+    resp = DailySummaryResponse(
+        status="success",
+        project_id=project_id,
+        assignee=assignee,
+        summary=(f"Daily summary for project {project_id}" if project_id else f"Daily summary for assignee {assignee}"),
+        details=details,
+        generated_at=generated_at,
+    )
+
+    return resp.model_dump()
 
 @mcp.tool(
     name="reschedule_meeting",
