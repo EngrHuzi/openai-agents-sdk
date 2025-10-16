@@ -9,7 +9,7 @@ from agents import (
 )
 from agents.model_settings import ModelSettings
 from config import model
-from validate_check import (
+from gaurdrail_check import (
     greeting_input_guardrail,
     greeting_output_guardrail,
     user_preference_input_guardrail,
@@ -100,10 +100,11 @@ async def main():
             ],
             model=model,
         )
+        
 
         orchestration_res = await Runner.run(
             orchestration_agent,
-            "Support me with  preference inheritance for team-based defaults ?"  # Test user preference query
+            "create a new task for the project 'Project X' with the title 'Task Y' and the description 'Task Z' and the assignee 'John Doe' and the due date '2025-10-17'"  
         )
         print("Orchestration Agent:", orchestration_res.to_input_list())
         print(orchestration_res.final_output)
