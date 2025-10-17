@@ -39,74 +39,72 @@ set_tracing_disabled(True)
 # =========================================
 # MAIN ENTRY POINT
 # =========================================
+def create_orchestration_agent(server: MCPServerStreamableHttp, model) -> "Agent":
+    """
+    Build and return the orchestration agent wired with sub-agents.
+    This is extracted so other entrypoints (e.g. Chainlit) can reuse the same graph.
+    """
+    greeting_agent = Agent(
+        name="Greeting Agent",
+        instructions=greeting_agent_instructions,
+        model=model,
+        input_guardrails=[greeting_input_guardrail],
+        output_guardrails=[greeting_output_guardrail],
+    )
+
+    user_preference_agent = Agent(
+        name="User Preference Agent",
+        instructions=user_preference_agent_instructions,
+        model=model,
+        input_guardrails=[user_preference_input_guardrail],
+        output_guardrails=[user_preference_output_guardrail],
+    )
+
+    knowledge_graph_agent = Agent(
+        name="Knowledge Graph Agent",
+        instructions=knowledge_graph_agent_instructions,
+        model=model,
+        input_guardrails=[knowledge_graph_input_guardrail],
+        output_guardrails=[knowledge_graph_output_guardrail],
+    )
+
+    project_management_agent = Agent(
+        name="Project Management Agent",
+        instructions=project_management_agent_instructions,
+        model=model,
+        input_guardrails=[project_management_input_guardrail],
+        output_guardrails=[project_management_output_guardrail],
+        mcp_servers=[server],
+        model_settings=ModelSettings(tool_choice="auto"),
+    )
+
+    orchestration_agent = Agent(
+        name="Front-End Orchestration Agent",
+        instructions=orchestration_agent_instructions,
+        handoffs=[
+            greeting_agent,
+            user_preference_agent,
+            project_management_agent,
+            knowledge_graph_agent,
+        ],
+        model=model,
+    )
+
+    return orchestration_agent
+
+
 async def main():
     # Configure MCP server with response transformation
     params_server = MCPServerStreamableHttpParams(
         url="http://localhost:8000/mcp"
     )
     async with MCPServerStreamableHttp(params_server,cache_tools_list=True) as server:
-
-
-        greeting_agent = Agent(
-            name="Greeting Agent",
-            instructions=greeting_agent_instructions,
-            model=model,
-            input_guardrails=[greeting_input_guardrail],
-            output_guardrails=[greeting_output_guardrail],
-        )
-        
-
-        user_preference_agent = Agent(
-            name="User Preference Agent",
-            instructions=user_preference_agent_instructions,
-            model=model,
-            input_guardrails=[user_preference_input_guardrail],
-            output_guardrails=[user_preference_output_guardrail],
-        )
-
-        
-
-        knowledge_graph_agent = Agent(
-            name="Knowledge Graph Agent",
-            instructions=knowledge_graph_agent_instructions,
-            model=model,
-            input_guardrails=[knowledge_graph_input_guardrail],
-            output_guardrails=[knowledge_graph_output_guardrail],
-        )
-
-        
-
-        project_management_agent = Agent(
-            name="Project Management Agent",
-            instructions=project_management_agent_instructions,
-            model=model,
-            input_guardrails=[project_management_input_guardrail],
-            output_guardrails=[project_management_output_guardrail],
-            mcp_servers=[server],   # ✅ Included MCP server
-            model_settings=ModelSettings(tool_choice="auto"),
-        )
-
-        # ---------------------------
-        # ORCHESTRATION AGENT
-        # ---------------------------
-        orchestration_agent = Agent(
-            name="Front-End Orchestration Agent",
-            instructions=orchestration_agent_instructions,
-            handoffs=[
-                greeting_agent,
-                user_preference_agent,
-                project_management_agent,
-                knowledge_graph_agent,
-            ],
-            model=model,
-        )
-        
+        orchestration_agent = create_orchestration_agent(server, model)
 
         orchestration_res = await Runner.run(
             orchestration_agent,
             "create a new task for the project 'Project X' with the title 'Task Y' and the description 'Task Z' and the assignee 'John Doe' and the due date '2025-10-17'"  
         )
-        print("Orchestration Agent:", orchestration_res.to_input_list())
         print(orchestration_res.final_output)
 
 

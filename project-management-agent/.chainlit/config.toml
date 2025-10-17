@@ -1,0 +1,20 @@
+[project]
+name = "Project Management Agent - Chainlit"
+description = "Interactive UI for the orchestration agent with streaming and starters"
+module = "chainlit_app"
+entrypoint = "chainlit_app.py"
+
+[UI]
+name = "Project Management Agent"
+default_theme = "dark"
+show_readme_as_default = true
+enable_emoji_picker = true
+enable_suggestions = true
+expand_messages = true
+hide_cot = true
+theme = "public/theme.json"
+
+[meta]
+version = 1
+generated_by = "1.2.0"
+

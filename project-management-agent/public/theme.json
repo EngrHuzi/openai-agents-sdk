@@ -1,0 +1,35 @@
+{
+  "default": {
+    "font": "Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+    "colors": {
+      "primary": "#6c5ce7",
+      "secondary": "#00cec9",
+      "success": "#00b894",
+      "warning": "#fdcb6e",
+      "error": "#e17055"
+    },
+    "chat": {
+      "userMessageBg": "#6c5ce7",
+      "userMessageText": "#ffffff",
+      "assistantMessageBg": "#1f2937",
+      "assistantMessageText": "#e5e7eb"
+    }
+  },
+  "dark": {
+    "background": "#0b1020",
+    "paper": "#12172a",
+    "text": "#e6e9f2",
+    "inputBackground": "#0f162d",
+    "inputText": "#e6e9f2",
+    "border": "#2a3150"
+  },
+  "light": {
+    "background": "#f7f8fc",
+    "paper": "#ffffff",
+    "text": "#1f2937",
+    "inputBackground": "#ffffff",
+    "inputText": "#111827",
+    "border": "#e5e7eb"
+  }
+}
+
