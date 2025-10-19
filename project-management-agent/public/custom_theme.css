@@ -1,0 +1,178 @@
+/* 🌸 Soft Pink Modern Theme for Chainlit */
+
+/* Global background */
+body {
+    background: linear-gradient(135deg, #fde2e4 0%, #fbcfe8 50%, #f9a8d4 100%) !important;
+    color: #4a044e !important;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.2px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* 🧭 Header (glass effect + light pink glow) */
+  header {
+    backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.5) !important;
+    border-bottom: 1px solid rgba(255, 182, 193, 0.3);
+    box-shadow: 0 2px 10px rgba(249, 168, 212, 0.4);
+  }
+  
+  /* 🌟 Logo styling */
+  img[alt="logo"] {
+    width: 48px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(249, 168, 212, 0.5);
+    margin-right: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  img[alt="logo"]:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 16px rgba(249, 168, 212, 0.7);
+  }
+  
+  /* 🪄 Starter buttons */
+  button.starter {
+    background: rgba(255, 255, 255, 0.6);
+    color: #4a044e;
+    border-radius: 14px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid rgba(255, 182, 193, 0.3);
+    transition: all 0.25s ease;
+  }
+  button.starter:hover {
+    background: linear-gradient(135deg, #fbcfe8, #f9a8d4);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(249, 168, 212, 0.4);
+    transform: translateY(-3px);
+  }
+  
+  /* 💬 User message bubble */
+  .message.user {
+    background: linear-gradient(135deg, #f472b6, #ec4899);
+    color: white;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 4px 15px rgba(244, 114, 182, 0.3);
+  }
+  
+  /* 🤖 Assistant message bubble */
+  .message.assistant {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 182, 193, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    color: #4a044e;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* ✍️ Input area */
+  textarea {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 182, 193, 0.5);
+    color: #4a044e;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: #ec4899;
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.4);
+  }
+  
+  /* 🌈 Scrollbar — soft pink */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(249, 168, 212, 0.6);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(236, 72, 153, 0.8);
+  }
+  
+  /* Force light theme colors even if a dark theme attribute sneaks in */
+  html[data-theme='dark'],
+  :root[data-theme='dark'] {
+    background: linear-gradient(135deg, #fde2e4 0%, #fbcfe8 50%, #f9a8d4 100%) !important;
+    color: #4a044e !important;
+  }
+  /* Keep inputs white even if dark classes are applied */
+  html[data-theme='dark'] input,
+  html[data-theme='dark'] textarea,
+  :root[data-theme='dark'] input,
+  :root[data-theme='dark'] textarea {
+    color: #ffffff !important;
+    caret-color: #ffffff !important;
+  }
+  html[data-theme='dark'] input::placeholder,
+  html[data-theme='dark'] textarea::placeholder,
+  :root[data-theme='dark'] input::placeholder,
+  :root[data-theme='dark'] textarea::placeholder {
+    color: rgba(255, 255, 255, 0.85) !important;
+    opacity: 1 !important;
+  }
+
+  /* Hide theme toggle UI elements if present */
+  button[aria-label="Switch theme"],
+  [data-testid="theme-toggle"],
+  .theme-toggle,
+  button[title~="theme"],
+  button[aria-label*="theme" i] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 🆕 Floating Action Button (FAB) — bottom right */
+.floating-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: linear-gradient(135deg, #f9a8d4, #ec4899);
+    color: white;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4);
+    z-index: 9999;
+    transition: all 0.3s ease;
+  }
+  
+  .floating-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.6);
+  }
+  
+  /* 🪄 Tooltip for FAB */
+  .floating-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 60px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    white-space: nowrap;
+  }
+  
+  .floating-btn:hover::after {
+    opacity: 1;
+  }
+  

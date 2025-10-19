@@ -1,0 +1,91 @@
+[project]
+user_env = []
+session_timeout = 3600
+user_session_timeout = 1296000
+cache = false
+persist_user_env = false
+mask_user_env = false
+allow_origins = ["*"]
+
+[features]
+unsafe_allow_html = false
+latex = false
+user_message_autoscroll = true
+auto_tag_thread = true
+edit_message = true
+allow_thread_sharing = true
+persistence = true
+
+[features.slack]
+reaction_on_message_received = false
+
+[features.spontaneous_file_upload]
+enabled = true
+accept = ["*/*"]
+max_files = 20
+max_size_mb = 500
+
+[features.audio]
+enabled = false
+sample_rate = 24000
+
+[features.mcp]
+enabled = false
+
+[features.mcp.sse]
+enabled = true
+
+[features.mcp.streamable-http]
+enabled = true
+
+[features.mcp.stdio]
+enabled = true
+allowed_executables = ["npx", "uvx"]
+
+[UI]
+# 🧠 Assistant display name
+name = "Project Management Agent"
+
+# 🌑 Set default theme to dark (cleaner & modern)
+# Set default theme to light so custom pink CSS is visible by default
+default_theme = "light"
+
+# 🧭 Sidebar behavior
+layout = "wide"
+default_sidebar_state = "open"
+
+# 🧭 How Chain of Thought is shown (hidden / tool_call / full)
+cot = "full"
+
+# 🖼️ Add your small resized logo here (e.g., 64x64 px)
+logo_file_url = "/public/architect.png"
+
+# 🧍 Optional assistant avatar
+default_avatar_file_url = "/public/avator.jpg"
+
+# ✨ Modern UI touch
+alert_style = "modern"
+
+# 🖌️ Custom background & UI styling
+custom_css = "/public/custom_theme.css"
+
+# 🧩 Load custom JS (force light theme and UI helpers)
+custom_js = "/public/custom_js.html"
+
+# 🧭 Optional header links (e.g., Docs / GitHub / Contact)
+[[UI.header_links]]
+name = "Docs"
+display_name = "Documentation"
+icon_url = "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/readthedocs.svg"
+url = "https://your-docs-link.com"
+target = "_blank"
+
+[[UI.header_links]]
+name = "GitHub"
+display_name = "GitHub"
+icon_url = "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg"
+url = "https://github.com/EngrHuzi"
+target = "_blank"
+
+[meta]
+generated_by = "2.8.3"

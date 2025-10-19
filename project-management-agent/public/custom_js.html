@@ -1,0 +1,75 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      function forceLightTheme() {
+        try {
+          const root = document.documentElement;
+          if (root.getAttribute('data-theme') !== 'light') {
+            root.setAttribute('data-theme', 'light');
+          }
+          if (localStorage.getItem('theme') !== 'light') {
+            localStorage.setItem('theme', 'light');
+          }
+        } catch (e) {
+          // no-op
+        }
+      }
+
+      // Enforce Light immediately
+      forceLightTheme();
+
+      // Prevent any code from setting dark in localStorage
+      try {
+        const originalSetItem = localStorage.setItem.bind(localStorage);
+        localStorage.setItem = (key, value) => {
+          if (key === 'theme' && value !== 'light') {
+            return originalSetItem('theme', 'light');
+          }
+          return originalSetItem(key, value);
+        };
+      } catch (e) {}
+
+      // Revert if theme changes from other tabs/windows
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'theme' && e.newValue !== 'light') {
+          forceLightTheme();
+        }
+      });
+
+      // Observe DOM to remove or disable any theme toggle controls
+      function removeThemeToggles(root = document) {
+        const selectors = [
+          'button[aria-label="Switch theme"]',
+          '[data-testid="theme-toggle"]',
+          '.theme-toggle',
+          'button[title~="theme"]',
+          'button[aria-label*="theme" i]'
+        ];
+        selectors.forEach(sel => {
+          root.querySelectorAll(sel).forEach(el => {
+            el.remove();
+          });
+        });
+      }
+      removeThemeToggles(document);
+
+      const observer = new MutationObserver((mutations) => {
+        removeThemeToggles(document);
+        forceLightTheme();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      const fab = document.createElement("div");
+      fab.className = "floating-btn";
+      fab.innerText = "💬";
+      fab.setAttribute("data-tooltip", "Start New Chat");
+  
+      fab.addEventListener("click", () => {
+        // 🧹 Reload the page to reset session
+        // or you can trigger a custom event if you want
+        window.location.reload();
+      });
+  
+      document.body.appendChild(fab);
+    });
+  </script>
+  
