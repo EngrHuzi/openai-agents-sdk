@@ -77,7 +77,7 @@ custom_js = "/public/custom_js.html"
 name = "Docs"
 display_name = "Documentation"
 icon_url = "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/readthedocs.svg"
-url = "https://your-docs-link.com"
+url = "https://github.com/EngrHuzi/openai-agents-sdk/blob/main/project-management-agent/README.md"
 target = "_blank"
 
 [[UI.header_links]]
